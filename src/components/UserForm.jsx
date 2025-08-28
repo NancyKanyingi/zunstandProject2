@@ -1,14 +1,18 @@
 import React from "react";
-import { useUserStore } from "../store/userStore";
+import useUserStore from "../store/userStore";
 
 const UserForm = () => {
-  const { addUser } = useUserStore();
+  const { createUser } = useUserStore();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    //create user
+    //update user
+    
     const formData = new FormData(e.target);
     const user = Object.fromEntries(formData);
-    addUser(user);
+    createUser(user);
   };
 
   return (
@@ -19,5 +23,5 @@ const UserForm = () => {
     </form>
   );
 };
-
+ 
 export default UserForm;

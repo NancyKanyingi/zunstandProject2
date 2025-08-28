@@ -3,7 +3,7 @@ import axios from "axios"
 
 const baseUrl = "https://fakestoreapi.com/users"
 //create zustand store.
-const userStore = create((set, get) => ({
+const useUserStore = create((set, get) => ({
 	//initial state -- to be accessed by components.
 	users: [],
 	loading: false,
@@ -37,6 +37,34 @@ const userStore = create((set, get) => ({
   	getUserById: (userId) => {
     	return get().users.find(user => user.id === parseInt(userId));
   	},
+	createUser: async (user) => {
+		set({ loading: true });
+		try {
+			const response = await axios.post(`${baseUrl}`, user);
+			set((state) => ({
+				users: [...state.users, response.data],
+				loading: false
+			}));
+		} catch (error) {
+			set({ loading: false });
+			console.log(error);
+		}
+	},
+	updateUser: async (userId, updatedData) => {
+		set({ loading: true });
+		try {
+			const response = await axios.put(`${baseUrl}/${userId}`, updatedData);
+			set((state) => ({
+				users: state.users.map((user) =>
+					user.id === userId ? response.data : user
+				),
+				loading: false
+			}));
+		} catch (error) {
+			set({ loading: false });
+			console.log(error);
+		}
+	}
 }));
 
-export default userStore;
+export default useUserStore;

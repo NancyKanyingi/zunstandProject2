@@ -3,9 +3,12 @@ import { Routes, Route } from 'react-router-dom';
 import UserList from './components/UserList';
 import UserDetail from './components/UserDetail';
 import UserStats from './components/UserStats';
+import UserForm from './components/UserForm';
+import useUserStore from './store/userStore';
 import './App.css';
 
 function App() {
+	const fetchUsers = useUserStore((state) => state.fetchUsers);
   return (
     <div>
       <header>
@@ -15,8 +18,9 @@ function App() {
         <Routes>
           <Route path="/" element={
             <>
-              {/* <UserStats /> */}
+			
               <UserList />
+			  <UserForm onSuccess={() => {fetchUsers}} />
             </>
           } />
           <Route path="/user/:id" element={<UserDetail />} />
