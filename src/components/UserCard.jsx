@@ -1,34 +1,36 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { userStore } from "../store/userStore";
 
-const UserCard = ({ user }) => {
-  if (!user) {
-    return <div>No user data available</div>;
+function UserCard({ user }) {
+  const deleteUser = userStore(state => state.deleteUser);
+
+  const handleDelete = async () => {
+  const userId = Number(user.id); // Ensure it's a number
+  console.log("Deleting user with ID:", userId); // Debug
+  if (window.confirm(`Are you sure you want to delete ${user.username}?`)) {
+    try {
+      await deleteUser(userId);
+      console.log("Deleted successfully:", userId);
+    } catch (err) {
+      console.error("Failed to delete:", err);
+    }
   }
+};
+
 
   return (
-    <Link to={`/user/${user.id}`}>
-      <div className="user-card">
-        <div>
-          <h3>@{user.username}</h3>
-        </div>
-        <div>
-          <div>
-            <div>
-              <strong>Name:</strong> {user.name?.firstname} {user.name?.lastname}
-            </div>
-            <div>
-              <strong>Email:</strong> 
-              <span>{user.email}</span>
-            </div>
-          </div>
-          <div>
-            <span>View Details</span>
-          </div>
-        </div>
+    <div className="user-card">
+      <h3>{user.username}</h3>
+      <p>Email: {user.email}</p>
+      <p>{user.name.firstname} {user.name.lastname}</p>
+
+      <div className="card-buttons">
+        <Link to={`/users/${user.id}`} className="btn view">View</Link>
+        <Link to={`/edit/${user.id}`} className="btn edit">Edit</Link>
+        <button onClick={handleDelete} className="btn delete">Delete</button>
       </div>
-    </Link>
+    </div>
   );
-};
+}
 
 export default UserCard;

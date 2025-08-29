@@ -1,0 +1,94 @@
+{
+  "users": [
+    {
+      "id": "6",
+      "username": "david_r",
+      "email": "david_r@gmail.com",
+      "password": "3478*#54",
+      "name": {
+        "firstname": "david",
+        "lastname": "russell"
+      }
+    },
+    {
+      "username": "dee",
+      "email": "dee@gmail.com",
+      "password": "dee@2",
+      "name": {
+        "firstname": "dee",
+        "lastname": "james"
+      },
+      "id": "7"
+    },
+    {
+      "id": "8",
+      "username": "hopkins",
+      "email": "william@gmail.com",
+      "password": "William56$hj",
+      "name": {
+        "firstname": "william",
+        "lastname": "hopkins"
+      }
+    },
+    {
+      "id": "9",
+      "username": "kate_h",
+      "email": "kate@gmail.com",
+      "password": "kfejk@*_",
+      "name": {
+        "firstname": "kate",
+        "lastname": "hale"
+      }
+    },
+    {
+      "id": "10",
+      "username": "jimmie_k",
+      "email": "jimmie@gmail.com",
+      "password": "klein*#%*",
+      "name": {
+        "firstname": "jimmie",
+        "lastname": "klein"
+      }
+    },
+    {
+      "id": "2b90",
+      "username": "jane",
+      "email": "jane@gmail.com",
+      "password": "sqbn",
+      "name": {
+        "firstname": "jane",
+        "lastname": "njagua"
+      }
+    },
+    {
+      "id": "8876",
+      "username": "james",
+      "email": "wachira",
+      "password": "sqbn",
+      "name": {
+        "firstname": "james",
+        "lastname": "wachira"
+      }
+    },
+    {
+      "id": "647e",
+      "username": "moses",
+      "email": "moses@gmail.com",
+      "password": "didy",
+      "name": {
+        "firstname": "moses",
+        "lastname": "njagua"
+      }
+    },
+    {
+      "id": "0081",
+      "username": "dee",
+      "email": "dee@gmail.com",
+      "password": "that",
+      "name": {
+        "firstname": "dee",
+        "lastname": "njagua"
+      }
+    }
+  ]
+}

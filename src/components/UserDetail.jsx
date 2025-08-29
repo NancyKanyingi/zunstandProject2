@@ -1,107 +1,45 @@
-import React, { useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import useUserStore from '../store/userStore';
+import { useParams, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { userStore } from "../store/userStore";
+import axios from "axios";
 
-const UserDetail = () => {
+const baseURL = "http://localhost:4000/users";
+
+function UserDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { 
-    currentUser, 
-    currentUserLoading, 
-    currentUserError, 
-    fetchUser, 
-    clearCurrentUser
-  } = useUserStore();
+  const { users, fetchUsers } = userStore();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (id) {
-      fetchUser(id);
+    const existing = users.find(u => u.id === Number(id));
+    if (existing) {
+      setUser(existing);
+      setLoading(false);
+    } else {
+      // Fetch user directly from API if not in store
+      axios.get(`${baseURL}/${id}`)
+        .then(res => setUser(res.data))
+        .catch(err => console.error(err))
+        .finally(() => setLoading(false));
     }
+  }, [id, users]);
 
-    // Cleanup function to clear current user when component unmounts
-    return () => {
-      clearCurrentUser();
-    };
-  }, [id, fetchUser, clearCurrentUser]);
-
-  const handleBack = () => {
-    navigate(-1); // Go back to previous page
-  };
-
-  if (currentUserLoading) {
-    return (
-      <div>
-        <div>
-          <div></div>
-          <p>Loading user details...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (currentUserError) {
-    return (
-      <div>
-        <div>
-          <h3>Error Loading User</h3>
-          <p>{currentUserError}</p>
-          <div>
-            <button onClick={handleBack}>
-              Go Back
-            </button>
-            <button onClick={() => fetchUser(id)}>
-              Try Again
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!currentUser) {
-    return (
-      <div >
-        <div>
-          <h3>User Not Found</h3>
-          <p>The user you're looking for doesn't exist.</p>
-          <button onClick={handleBack} className="back-button">
-            Go Back to Users
-          </button>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <p>Loading user...</p>;
+  if (!user) return <p>User not found.</p>;
 
   return (
-    <div>
-      <div>
-        <button onClick={handleBack} className="back-button">
-          ← Back
-        </button>
-        <h1>User Details</h1>
-      </div>
-      <div>
-        <div>
-          <div>
-            <h2>{currentUser.name?.firstname} {currentUser.name?.lastname}</h2>
-            <p>@{currentUser.username}</p>
-          </div>
-        </div>
+    <div className="user-detail">
+      <h2>{user.username}</h2>
+      <p>Email: {user.email}</p>
+      <p>Name: {user.name.firstname} {user.name.lastname}</p>
 
-        <div>
-          <div>
-            <h3>Contact Information</h3>
-            <div>
-              <div>
-                <strong>Email:</strong>
-                {currentUser.email}
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="card-buttons">
+        <Link to={`/edit/${user.id}`} className="btn edit">Edit</Link>
+        <Link to="/" className="btn view">Back</Link>
       </div>
     </div>
   );
-};
+}
 
 export default UserDetail;

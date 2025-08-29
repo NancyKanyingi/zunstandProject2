@@ -1,70 +1,55 @@
-import { create  } from "zustand"
-import axios from "axios"
+import { create } from "zustand";
+import axios from "axios";
 
-const baseUrl = "https://fakestoreapi.com/users"
-//create zustand store.
-const useUserStore = create((set, get) => ({
-	//initial state -- to be accessed by components.
-	users: [],
-	loading: false,
-	currentUser: null,
-	currentUserLoading: false,
-	//fetch action -- using axios
-	fetchUsers: async () => {
-		set({ loading: true });
-		try {
-			const response = await axios.get(`${baseUrl}`);
-			set({ users: response.data, loading: false });
-		} catch (error) {
-			set({ users: [], loading: false });
-			console.log(error);
-		}
-	},
-	// Action for fetching a single user.
-	fetchUser: async (userId) => {
-		set({ loading: true });
-		try {
-			const response = await axios.get(`${baseUrl}/${userId}`);
-			set({ currentUser: response.data, currentUserLoading: false });
-		} catch (error) {
-			set({ currentUser: null, currentUserLoading: false });
-			console.log(error);
-		}
-	},
-	//clear current user
-	clearCurrentUser: () => set({ currentUser: null , currentUserLoading:false}),
-	// Getter functions
-  	getUserById: (userId) => {
-    	return get().users.find(user => user.id === parseInt(userId));
-  	},
-	createUser: async (user) => {
-		set({ loading: true });
-		try {
-			const response = await axios.post(`${baseUrl}`, user);
-			set((state) => ({
-				users: [...state.users, response.data],
-				loading: false
-			}));
-		} catch (error) {
-			set({ loading: false });
-			console.log(error);
-		}
-	},
-	updateUser: async (userId, updatedData) => {
-		set({ loading: true });
-		try {
-			const response = await axios.put(`${baseUrl}/${userId}`, updatedData);
-			set((state) => ({
-				users: state.users.map((user) =>
-					user.id === userId ? response.data : user
-				),
-				loading: false
-			}));
-		} catch (error) {
-			set({ loading: false });
-			console.log(error);
-		}
-	}
+const baseURL = "http://localhost:4000/users";
+
+export const userStore = create((set, get) => ({
+  users: [],
+  loading: false,
+  error: null,
+
+  fetchUsers: async () => {
+    try {
+      set({ loading: true, error: null });
+      const res = await axios.get(baseURL);
+      set({ users: res.data, loading: false });
+    } catch {
+      set({ error: "Failed to fetch users", loading: false });
+    }
+  },
+
+  createUser: async (user) => {
+    try {
+      const res = await axios.post(baseURL, user);
+      set({ users: [...get().users, res.data] });
+    } catch {
+      set({ error: "Failed to create user" });
+    }
+  },
+
+  updateUser: async (id, user) => {
+    try {
+      const numericId = Number(id); // ensure number
+      const res = await axios.put(`${baseURL}/${numericId}`, user);
+      set({
+        users: get().users.map((u) =>
+          u.id === numericId ? res.data : u
+        ),
+      });
+    } catch {
+      set({ error: "Failed to update user" });
+    }
+  },
+
+  deleteUser: async (id) => {
+    try {
+      const numericId = Number(id); // ensure number
+      await axios.delete(`${baseURL}/${numericId}`);
+      set({
+        users: get().users.filter((u) => u.id !== numericId),
+      });
+    } catch {
+      set({ error: "Failed to delete user" });
+    }
+  },
 }));
-
-export default useUserStore;
