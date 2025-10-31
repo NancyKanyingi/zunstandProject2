@@ -5,6 +5,10 @@ import axios from "axios";
 
 const baseURL = "http://localhost:4000/users";
 
+
+// const baseURL = "http://172.21.46.217:4000/users"; 
+
+
 function UserDetail() {
   const { id } = useParams();
   const { users, fetchUsers } = userStore();
